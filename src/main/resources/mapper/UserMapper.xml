@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wsz.spring.restful.dao.UserDao">
+	
+	<sql id="baseColumn">
+		id, realname, username, password
+	</sql>
+	
+	<select id="getAllUser" resultType="wsz.spring.restful.domain.User">
+		select <include refid="baseColumn"/>
+		from t_user
+	</select>
+	
+	<select id="getUserById" parameterType="int" resultType="wsz.spring.restful.domain.User">
+		select <include refid="baseColumn"/>
+		from t_user
+		where id = #{id}
+	</select>
+	
+	<select id="getUserByRealname" parameterType="String" resultType="wsz.spring.restful.domain.User">
+		select <include refid="baseColumn"/>
+		from t_user
+		where realname = #{realname}
+	</select>
+	
+	<select id="getUserByUsername" parameterType="String" resultType="wsz.spring.restful.domain.User">
+		select <include refid="baseColumn"/>
+		from t_user
+		where username like concat('%',username, '%')
+	</select>
+	
+	<select id="getUserByUsernameAndPassword" parameterType="String" resultType="wsz.spring.restful.domain.User">
+		select <include refid="baseColumn"/>
+		from t_user
+		where username = #{username} and password = #{password}
+	</select>
+	
+	<insert id="insertUser" parameterType="wsz.spring.restful.domain.User" keyColumn="id" useGeneratedKeys="true">
+		insert into t_user(realname, username, password)
+		values (#{realName}, #{userName}, #{password})
+	</insert>
+	
+	<update id="updateUser" parameterType="wsz.spring.restful.domain.User">
+		update t_user
+		<set>
+			<if test="userName != null and userName != ''">username = #{userName},</if>
+			<if test="realName != null and realName != ''">realname = #{realName},</if>
+			<if test="password != null and password != ''">password = #{password}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteUser" parameterType="int" >
+		delete
+		from t_user
+		where id=#{id}
+	</delete>
+</mapper>
